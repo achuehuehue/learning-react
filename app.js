@@ -1,10 +1,61 @@
-const heading=React.createElement("h1",{class:"heading"},"Hello world from react");
-const div=ReactDOM.createRoot(document.querySelector('.main'));
-div.render(heading);
+import React from "react";
+import ReactDOM from "react-dom/client";
+import Header from "./components/header.js";
+import Body from "./components/body.js";
+import { createBrowserRouter,RouterProvider,Outlet} from "react-router-dom";
+import About from "./components/about.js";
+import Error from "./components/error.js";
+import Menu from "./components/menu.js";
+import { Provider } from "react-redux";
+import appStore from "./utils/appStore.js";
+import Cart from "./components/cart.js";
+import Login from "./components/login.js";
+import Contact from "./components/Contact.js";
 
-const parent=React.createElement("div",{class:"parent"},
-React.createElement("div",{class:"child"},
-React.createElement("h1",{},"i am h1 from nested"))
-);
 
-div.render(parent);
+const AppLayout=()=>{
+    return (
+   <Provider store={appStore}>
+     <div className="">
+        <Header></Header>
+        <Outlet></Outlet>
+    </div>
+   </Provider>)
+};
+const appRouter=createBrowserRouter([
+{
+    path:"/",
+    element:<AppLayout></AppLayout>,
+    children:[
+        {
+            path:"/",
+            element:<Body></Body>,
+        },
+        {
+            path:"/About",
+            element:<About></About>,
+        },
+        {
+            path:"/Restaurants/:resId",
+            element:<Menu></Menu>,
+        },
+        {
+            path:"/Cart",
+            element:<Cart></Cart>
+        },
+        {
+            path:"/Login",
+            element:<Login></Login>
+        },
+        {
+            path:"/Contact",
+            element:<Contact></Contact>
+        }
+    ],
+    errorElement:<Error></Error>,
+},
+
+]);
+const root=ReactDOM.createRoot(document.querySelector('.main'));
+
+root.render(<RouterProvider router={appRouter} ></RouterProvider>);
